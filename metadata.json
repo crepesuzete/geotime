@@ -1,0 +1,9 @@
+{
+  "name": "GEOTIME Tactical",
+  "description": "Sistema de Geo-Inteligência Tática com análise de cenários, linha do tempo e narrativa visual.",
+  "requestFramePermissions": [
+    "display-capture",
+    "microphone",
+    "camera"
+  ]
+}
