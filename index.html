@@ -123,6 +123,33 @@
   <body class="bg-gray-900 text-gray-100 overflow-hidden">
     <div id="root"></div>
 <script type="module">
+  import React from 'react';
+  import ReactDOM from 'react-dom/client';
+  import Login from './Login.tsx';
+
+  // SEU COMPONENTE DO MAPA (muda se o nome for diferente)
+  // tenta um por um até achar o certo
+  const mapaPromise = import('./App.tsx')
+    .catch(() => import('./Mapa.tsx'))
+    .catch(() => import('./Index.tsx'))
+    .catch(() => import('./main.tsx'));
+
+  // SE JÁ TIVER LOGADO → CARREGA O MAPA
+  if (document.cookie.includes('gt-access=liberado')) {
+    mapaPromise.then(module => {
+      ReactDOM.createRoot(document.getElementById('root')!).render(
+        <React.StrictMode>
+          {React.createElement(module.default)}
+        </React.StrictMode>
+      );
+    });
+  } 
+  // SE NÃO TIVER LOGADO → MOSTRA O LOGIN
+  else {
+    const root = ReactDOM.createRoot(document.getElementById('root')!);
+    root.render(<Login />);
+  }
+</script>
   import Login from './Login.tsx';
   import React from 'react';
   import ReactDOM from 'react-dom/client';
