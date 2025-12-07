@@ -122,6 +122,16 @@
 </head>
   <body class="bg-gray-900 text-gray-100 overflow-hidden">
     <div id="root"></div>
+<script type="module">
+  import Login from './Login.tsx';
+  import React from 'react';
+  import ReactDOM from 'react-dom/client';
+
+  // Checa cookie na mão
+  if (!document.cookie.includes('gt-access=liberado')) {
+    ReactDOM.createRoot(document.getElementById('root')).render(<Login />);
+  }
+</script>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>
