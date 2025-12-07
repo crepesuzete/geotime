@@ -3,162 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GEOTIME Tactical Geo-Intelligence</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <style>
-      /* Custom Scrollbar for dark theme */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #1f2937; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #4b5563; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #6b7280; 
-      }
-      .leaflet-container {
-        background: #111827; /* Dark bg for map load */
-      }
-      /* Tactical Marker Styles */
-      .tactical-marker {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.6));
-        transition: width 0.3s ease, height 0.3s ease; /* Smooth size transition */
-      }
-      .marker-icon-wrapper {
-        background: white;
-        border-radius: 50%;
-        padding: 10%; /* Responsive padding */
-        border: 2px solid currentColor;
-        transition: transform 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .marker-icon-wrapper svg {
-        width: 60%;
-        height: 60%;
-      }
-      .tactical-marker:hover .marker-icon-wrapper {
-        transform: scale(1.1);
-        border-color: #3b82f6;
-        z-index: 1000;
-      }
-      
-      /* Tactical Tooltip Styles - FIXED LABELS */
-      .leaflet-tooltip.tactical-tooltip {
-        background-color: #000000; /* Black background */
-        border: 1px solid #374151;
-        border-left: 3px solid #3b82f6;
-        color: #ffffff;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 11px; /* Slightly larger for readability */
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 4px 6px;
-        border-radius: 2px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.8);
-        
-        /* TEXT WRAPPING & LIMITS */
-        white-space: normal !important; /* Force wrap */
-        width: max-content;
-        max-width: 16ch; /* Limit to approx 20-25 chars depending on font width */
-        line-height: 1.1;
-        text-align: center;
-      }
-      
-      /* Line clamping for max 2 lines */
-      .tactical-tooltip span {
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* Allow 3 lines if needed due to narrow width */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
+    <title>GEOTIME Tactical</title>
+    <script type="module">
+      import React from 'react';
+      import ReactDOM from 'react-dom/client';
+      import Login from './Login.tsx';
 
-      .leaflet-tooltip-top:before {
-        border-top-color: #000000;
-      }
-      .leaflet-tooltip-bottom:before {
-        border-bottom-color: #000000;
-      }
+      // Tenta carregar o componente principal (qualquer um que existir)
+      const loadMap = () => {
+        import('./App.tsx')
+          .catch(() => import('./Mapa.tsx'))
+          .catch(() => import('./Index.tsx'))
+          .catch(() => import('./main.tsx'))
+          .then(module => {
+            ReactDOM.createRoot(document.getElementById('root')!).render(
+              React.createElement(React.StrictMode, null, React.createElement(module.default))
+            );
+          });
+      };
 
-      /* HIGH CONTRAST LABELS FOR SATELLITE - CLEAN WHITE (NO GLOW) */
-      .high-contrast-labels {
-          filter: brightness(2) contrast(1.2) grayscale(1);
+      if (document.cookie.includes('gt-access=liberado')) {
+        loadMap();
+      } else {
+        ReactDOM.createRoot(document.getElementById('root')!).render(
+          React.createElement(Login)
+        );
       }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react": "https://aistudiocdn.com/react@^19.2.1",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
-    "uuid": "https://aistudiocdn.com/uuid@^13.0.0",
-    "react-leaflet": "https://aistudiocdn.com/react-leaflet@^5.0.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
-    "leaflet/": "https://aistudiocdn.com/leaflet@^1.9.4/",
-    "leaflet": "https://aistudiocdn.com/leaflet@^1.9.4",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "jspdf": "https://aistudiocdn.com/jspdf@^3.0.4"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
-  <body class="bg-gray-900 text-gray-100 overflow-hidden">
+    </script>
+  </head>
+  <body>
     <div id="root"></div>
-<script type="module">
-  import React from 'react';
-  import ReactDOM from 'react-dom/client';
-  import Login from './Login.tsx';
-
-  // SEU COMPONENTE DO MAPA (muda se o nome for diferente)
-  // tenta um por um até achar o certo
-  const mapaPromise = import('./App.tsx')
-    .catch(() => import('./Mapa.tsx'))
-    .catch(() => import('./Index.tsx'))
-    .catch(() => import('./main.tsx'));
-
-  // SE JÁ TIVER LOGADO → CARREGA O MAPA
-  if (document.cookie.includes('gt-access=liberado')) {
-    mapaPromise.then(module => {
-      ReactDOM.createRoot(document.getElementById('root')!).render(
-        <React.StrictMode>
-          {React.createElement(module.default)}
-        </React.StrictMode>
-      );
-    });
-  } 
-  // SE NÃO TIVER LOGADO → MOSTRA O LOGIN
-  else {
-    const root = ReactDOM.createRoot(document.getElementById('root')!);
-    root.render(<Login />);
-  }
-</script>
-  import Login from './Login.tsx';
-  import React from 'react';
-  import ReactDOM from 'react-dom/client';
-
-  // Checa cookie na mão
-  if (!document.cookie.includes('gt-access=liberado')) {
-    ReactDOM.createRoot(document.getElementById('root')).render(<Login />);
-  }
-</script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>
