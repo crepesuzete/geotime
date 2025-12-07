@@ -62,4 +62,4 @@ O **GEOTIME Tactical** é uma plataforma web de inteligência geoespacial (GEOIN
 
 ## 📄 Licença
 
-Propriedade Intelectual Reservada. Uso restrito para demonstração e operações autorizadas.
+Propriedade Intelectual Reservada.Robson Freire Tavares2025 - Uso restrito para demonstração e operações autorizadas.
